@@ -23,5 +23,9 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
         }
 
+        findViewById<LinearLayout>(R.id.navPost).setOnClickListener {
+            startActivity(Intent(this, PostItemActivity::class.java))
+        }
+
     }
 }
