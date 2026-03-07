@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.content.Intent
+import android.widget.FrameLayout
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,5 +33,12 @@ class MainActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.navSearch).setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }
+
+        findViewById<FrameLayout>(R.id.frameBell).setOnClickListener {
+            android.util.Log.d("DEBUG", "Bell clicked!")
+            startActivity(Intent(this, NotificationsActivity::class.java))
+        }
+
+
     }
 }

@@ -12,9 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FindIt">
         <activity
+            android:name=".NotificationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".PostItemActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
