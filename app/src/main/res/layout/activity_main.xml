@@ -170,6 +170,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Search items, category, location..."
+                    android:textColorHint="#000000"
                     android:textSize="13sp"
                     android:textColor="#9E9E9E"
                     android:paddingStart="8dp"
