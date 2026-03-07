@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="#F5F7FA">
 
     <androidx.appcompat.widget.Toolbar
@@ -20,7 +21,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,19 +40,21 @@
                 android:textColor="#212121"
                 android:layout_marginBottom="4dp"/>
 
+            <!-- Description -->
             <EditText
                 android:id="@+id/etItemName"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="e.g. Blue Wallet, Student ID Card"
-                android:textSize="13sp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/bg_input"
+                android:hint="e.g. Blue Wallet, Student ID Card"
+                android:inputType="text"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                android:inputType="text"
-                android:layout_marginBottom="12dp"/>
+                android:textSize="13sp"
+                android:textColor="#212121"
+                android:textColorHint="#212121"/>
 
-            <!-- Description -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,7 +75,9 @@
                 android:paddingEnd="12dp"
                 android:inputType="textMultiLine"
                 android:gravity="top"
-                android:layout_marginBottom="12dp"/>
+                android:layout_marginBottom="12dp"
+                android:textColor="#212121"
+                android:textColorHint="#212121"/>
 
             <!-- L9: Lost or Found RadioGroup -->
             <TextView
@@ -183,7 +189,9 @@
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
                 android:inputType="text"
-                android:layout_marginBottom="12dp"/>
+                android:layout_marginBottom="12dp"
+                android:textColor="#212121"
+                android:textColorHint="#212121"/>
 
             <!-- Date -->
             <TextView
@@ -205,7 +213,9 @@
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
                 android:inputType="date"
-                android:layout_marginBottom="12dp"/>
+                android:layout_marginBottom="12dp"
+                android:textColor="#212121"
+                android:textColorHint="#212121"/>
 
             <!-- Contact -->
             <TextView
@@ -227,7 +237,9 @@
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
                 android:inputType="phone"
-                android:layout_marginBottom="20dp"/>
+                android:layout_marginBottom="20dp"
+                android:textColor="#212121"
+                android:textColorHint="#212121"/>
 
             <!-- Submit Button -->
             <TextView
