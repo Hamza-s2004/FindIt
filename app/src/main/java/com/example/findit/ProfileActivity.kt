@@ -27,5 +27,9 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(Intent(this, PostItemActivity::class.java))
         }
 
+        findViewById<LinearLayout>(R.id.navSearch).setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
+
     }
 }
