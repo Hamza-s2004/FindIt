@@ -31,51 +31,51 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:text="Search"
-                android:textSize="14sp"
-                android:textStyle="bold"
                 android:textColor="#212121"
-                android:layout_marginBottom="4dp"/>
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="Search by name, category..."
-                android:textColor="#212121"
-                android:textColorHint="#9E9E9E"
-                android:textSize="13sp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_input"
+                android:hint="Search by name, category..."
+                android:inputType="text"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                android:inputType="text"
-                android:layout_marginBottom="16dp"/>
+                android:textColor="#212121"
+                android:textColorHint="#9E9E9E"
+                android:textSize="13sp" />
 
             <!-- L9: Filter by Type -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:text="Filter by Type"
-                android:textSize="14sp"
-                android:textStyle="bold"
                 android:textColor="#212121"
-                android:layout_marginBottom="4dp"/>
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <RadioGroup
                 android:id="@+id/rgFilterType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/rbAll"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:checked="true"
                     android:text="All"
-                    android:textColor="#212121"
-                    android:checked="true"/>
+                    android:textColor="#212121" />
 
                 <RadioButton
                     android:id="@+id/rbFilterLost"
@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Lost"
-                    android:textColor="#212121"/>
+                    android:textColor="#212121" />
 
                 <RadioButton
                     android:id="@+id/rbFilterFound"
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Found"
-                    android:textColor="#212121"/>
+                    android:textColor="#212121" />
 
             </RadioGroup>
 
@@ -99,11 +99,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Filter by Category"
-                android:textSize="14sp"
-                android:textStyle="bold"
                 android:textColor="#212121"
-                android:layout_marginBottom="8dp"/>
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -115,111 +115,111 @@
                     android:id="@+id/flow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:flow_wrapMode="chain"
+                    app:constraint_referenced_ids="tagIdCard,tagWallet,tagElectronics,tagBooks,tagBags,tagKeys,tagOthers"
                     app:flow_horizontalGap="8dp"
                     app:flow_verticalGap="8dp"
-                    app:constraint_referenced_ids="tagIdCard,tagWallet,tagElectronics,tagBooks,tagBags,tagKeys,tagOthers"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:flow_wrapMode="chain"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <!-- Tag 1 -->
                 <TextView
                     android:id="@+id/tagIdCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🆔 ID Card"
-                    android:textSize="12sp"
-                    android:textColor="#1565C0"
                     android:background="@drawable/bg_tag"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
                     android:paddingTop="6dp"
-                    android:paddingBottom="6dp"/>
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="🆔 ID Card"
+                    android:textColor="#1565C0"
+                    android:textSize="12sp" />
 
                 <!-- Tag 2 -->
                 <TextView
                     android:id="@+id/tagWallet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="💳 Wallet"
-                    android:textSize="12sp"
-                    android:textColor="#1565C0"
                     android:background="@drawable/bg_tag"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
                     android:paddingTop="6dp"
-                    android:paddingBottom="6dp"/>
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="💳 Wallet"
+                    android:textColor="#1565C0"
+                    android:textSize="12sp" />
 
                 <!-- Tag 3 -->
                 <TextView
                     android:id="@+id/tagElectronics"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📱 Electronics"
-                    android:textSize="12sp"
-                    android:textColor="#1565C0"
                     android:background="@drawable/bg_tag"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
                     android:paddingTop="6dp"
-                    android:paddingBottom="6dp"/>
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="📱 Electronics"
+                    android:textColor="#1565C0"
+                    android:textSize="12sp" />
 
                 <!-- Tag 4 -->
                 <TextView
                     android:id="@+id/tagBooks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📚 Books"
-                    android:textSize="12sp"
-                    android:textColor="#1565C0"
                     android:background="@drawable/bg_tag"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
                     android:paddingTop="6dp"
-                    android:paddingBottom="6dp"/>
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="📚 Books"
+                    android:textColor="#1565C0"
+                    android:textSize="12sp" />
 
                 <!-- Tag 5 -->
                 <TextView
                     android:id="@+id/tagBags"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🎒 Bags"
-                    android:textSize="12sp"
-                    android:textColor="#1565C0"
                     android:background="@drawable/bg_tag"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
                     android:paddingTop="6dp"
-                    android:paddingBottom="6dp"/>
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="🎒 Bags"
+                    android:textColor="#1565C0"
+                    android:textSize="12sp" />
 
                 <!-- Tag 6 -->
                 <TextView
                     android:id="@+id/tagKeys"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🔑 Keys"
-                    android:textSize="12sp"
-                    android:textColor="#1565C0"
                     android:background="@drawable/bg_tag"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
                     android:paddingTop="6dp"
-                    android:paddingBottom="6dp"/>
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="🔑 Keys"
+                    android:textColor="#1565C0"
+                    android:textSize="12sp" />
 
                 <!-- Tag 7 -->
                 <TextView
                     android:id="@+id/tagOthers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📦 Others"
-                    android:textSize="12sp"
-                    android:textColor="#1565C0"
                     android:background="@drawable/bg_tag"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
                     android:paddingTop="6dp"
-                    android:paddingBottom="6dp"/>
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="📦 Others"
+                    android:textColor="#1565C0"
+                    android:textSize="12sp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -227,46 +227,46 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:text="Filter by Date"
-                android:textSize="14sp"
-                android:textStyle="bold"
                 android:textColor="#212121"
-                android:layout_marginBottom="4dp"/>
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/etFromDate"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:hint="From date"
-                    android:textColor="#212121"
-                    android:textColorHint="#9E9E9E"
-                    android:textSize="13sp"
                     android:background="@drawable/bg_input"
+                    android:hint="From date"
+                    android:inputType="date"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
-                    android:inputType="date"
-                    android:layout_marginEnd="8dp"/>
+                    android:textColor="#212121"
+                    android:textColorHint="#9E9E9E"
+                    android:textSize="13sp" />
 
                 <EditText
                     android:id="@+id/etToDate"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:hint="To date"
-                    android:textColor="#212121"
-                    android:textColorHint="#9E9E9E"
-                    android:textSize="13sp"
                     android:background="@drawable/bg_input"
+                    android:hint="To date"
+                    android:inputType="date"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
-                    android:inputType="date"/>
+                    android:textColor="#212121"
+                    android:textColorHint="#9E9E9E"
+                    android:textSize="13sp" />
 
             </LinearLayout>
 
@@ -275,13 +275,13 @@
                 android:id="@+id/btnApply"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="Apply Filters"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:gravity="center"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_category_featured"
-                android:layout_marginBottom="8dp"/>
+                android:gravity="center"
+                android:text="Apply Filters"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>
