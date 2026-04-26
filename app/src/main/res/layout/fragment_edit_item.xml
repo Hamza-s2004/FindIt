@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="#F5F7FA">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#1565C0"
+        app:title="Edit Item"
+        app:titleTextColor="#FFFFFF"
+        app:navigationIcon="@drawable/ic_back"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Item Name"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#212121"
+                android:layout_marginBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/etItemName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_input"
+                android:hint="Item name"
+                android:inputType="text"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textSize="13sp"
+                android:textColor="#212121"
+                android:textColorHint="#9E9E9E"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#212121"
+                android:layout_marginBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/etDescription"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:hint="Describe the item..."
+                android:textSize="13sp"
+                android:background="@drawable/bg_input"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:layout_marginBottom="12dp"
+                android:textColor="#212121"
+                android:textColorHint="#9E9E9E"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Post Type"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#212121"
+                android:layout_marginBottom="4dp"/>
+
+            <RadioGroup
+                android:id="@+id/rgPostType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <RadioButton
+                    android:id="@+id/rbLost"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Lost"
+                    android:textColor="#212121"/>
+
+                <RadioButton
+                    android:id="@+id/rbFound"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Found"
+                    android:textColor="#212121"/>
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#212121"
+                android:layout_marginBottom="4dp"/>
+
+            <RadioGroup
+                android:id="@+id/rgCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
+
+                <RadioButton
+                    android:id="@+id/rbIdCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🆔 ID Card"
+                    android:textColor="#212121"/>
+
+                <RadioButton
+                    android:id="@+id/rbWallet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💳 Wallet"
+                    android:textColor="#212121"/>
+
+                <RadioButton
+                    android:id="@+id/rbElectronics"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📱 Electronics"
+                    android:textColor="#212121"/>
+
+                <RadioButton
+                    android:id="@+id/rbBooks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📚 Books"
+                    android:textColor="#212121"/>
+
+                <RadioButton
+                    android:id="@+id/rbBags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🎒 Bags"
+                    android:textColor="#212121"/>
+
+                <RadioButton
+                    android:id="@+id/rbOthers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📦 Others"
+                    android:textColor="#212121"/>
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#212121"
+                android:layout_marginBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/etLocation"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Location"
+                android:textSize="13sp"
+                android:background="@drawable/bg_input"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:inputType="text"
+                android:layout_marginBottom="12dp"
+                android:textColor="#212121"
+                android:textColorHint="#9E9E9E"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#212121"
+                android:layout_marginBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/etDate"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="yyyy-MM-dd"
+                android:textSize="13sp"
+                android:background="@drawable/bg_input"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:inputType="date"
+                android:layout_marginBottom="12dp"
+                android:textColor="#212121"
+                android:textColorHint="#9E9E9E"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#212121"
+                android:layout_marginBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/etContact"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Contact"
+                android:textSize="13sp"
+                android:background="@drawable/bg_input"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:inputType="phone"
+                android:layout_marginBottom="20dp"
+                android:textColor="#212121"
+                android:textColorHint="#9E9E9E"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Cancel"/>
+
+                <TextView
+                    android:id="@+id/btnSave"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="Save Changes"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:gravity="center"
+                    android:background="@drawable/bg_category_featured"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

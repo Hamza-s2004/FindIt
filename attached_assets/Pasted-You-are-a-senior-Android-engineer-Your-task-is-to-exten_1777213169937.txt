@@ -1,0 +1,171 @@
+You are a senior Android engineer. Your task is to extend an EXISTING Android project (Assignment #03) by implementing robust data handling with REST API integration and SQLite persistence.
+
+You MUST follow all constraints strictly. Do NOT simplify, skip layers, or replace required technologies.
+
+========================
+CORE REQUIREMENTS
+========================
+
+1. ARCHITECTURE
+- Maintain clean architecture (recommended: MVVM or Repository pattern).
+- Activities = only containers.
+- All UI must be inside Fragments.
+- Separate concerns:
+  - UI Layer (Fragments)
+  - Data Layer (Repository, API, DB)
+  - Local DB Helper (SQLiteOpenHelper)
+
+2. THREADING (CRITICAL)
+- ALL network calls AND database operations MUST run on background threads.
+- Use Kotlin Coroutines (Dispatchers.IO).
+- UI updates must occur on Main thread.
+
+========================
+F1: REST API INTEGRATION
+========================
+
+- Integrate a PUBLIC REST API relevant to the existing app theme.
+- Use Retrofit (preferred) or Volley.
+- Parse JSON properly into data models.
+- Display data in RecyclerView.
+
+Deliver:
+- API interface (Retrofit)
+- Data models
+- Repository function (e.g., fetchDataFromApi())
+- RecyclerView Adapter
+- Fragment to display API data
+
+========================
+F2: SQLITE DATABASE DESIGN
+========================
+
+- Use ONLY SQLiteOpenHelper (NO Room, NO SharedPreferences for main data).
+- Create at least TWO tables with:
+  - Primary Key (AUTOINCREMENT)
+  - Foreign Key relationship
+
+Example (adapt to project):
+- Table1: Categories / Users / Folders
+- Table2: Items / News / Bookmarks linked via foreign key
+
+Deliver:
+- DatabaseHelper class
+- onCreate() with SQL schema
+- onUpgrade()
+
+========================
+F3: FULL CRUD OPERATIONS
+========================
+
+Implement COMPLETE CRUD:
+
+- Create → Insert new record
+- Read → Fetch all / filtered data
+- Update → Modify existing data
+- Delete → Remove data
+
+Deliver:
+- Repository methods:
+  - insertData()
+  - getData()
+  - updateData()
+  - deleteData()
+- UI forms/fragments to perform these actions
+
+Data MUST persist after app restart.
+
+========================
+F4: DATA INTEGRATION STRATEGY
+========================
+
+Choose ONE approach based on project:
+
+OPTION A (Preferred for better grading):
+- Sync API → Store in SQLite for offline caching
+- On app start:
+  - Load from DB first
+  - Refresh from API in background
+
+OPTION B:
+- API and SQLite as separate modules
+  (e.g., API for global data, SQLite for favorites)
+
+Clearly implement and structure this logic.
+
+========================
+F5: DYNAMIC SQL QUERIES
+========================
+
+Implement:
+- Search using LIKE
+- Sorting using ORDER BY
+- Optional filtering
+
+Deliver:
+- Methods like:
+  - searchData(query: String)
+  - sortData(order: String)
+
+Bind results to RecyclerView dynamically.
+
+========================
+CODE STRUCTURE (MANDATORY)
+========================
+
+Organize code into:
+
+- data/
+  - api/
+  - model/
+  - repository/
+  - db/
+
+- ui/
+  - fragments/
+  - adapters/
+
+- utils/
+
+========================
+LOGIC MAP SUPPORT
+========================
+
+Add clear comments in code so the following mapping is obvious:
+
+Example:
+F1 → Repository.kt → fetchApiData()
+F2 → DatabaseHelper.kt → onCreate()
+F3 → AddFragment.kt → insertData()
+F4 → Repository.kt → syncApiToDb()
+F5 → Repository.kt → searchData()
+
+========================
+QUALITY REQUIREMENTS
+========================
+
+- No hardcoding values unnecessarily
+- Proper null safety
+- Error handling for API failures
+- Toast/Snackbar for user feedback
+- Clean, readable, maintainable code
+
+========================
+OUTPUT FORMAT
+========================
+
+Generate COMPLETE working code:
+- Do NOT give partial snippets
+- Include all required classes and files
+- Show how components connect
+
+========================
+IMPORTANT
+========================
+
+- Do NOT replace SQLiteOpenHelper with Room
+- Do NOT run DB/API on main thread
+- Do NOT skip foreign key relationships
+- Do NOT give pseudo code — only real implementation
+
+Start by analyzing the existing project structure, then extend it step by step.

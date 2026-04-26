@@ -103,7 +103,7 @@
             android:orientation="vertical"
             android:padding="12dp">
 
-            <!-- FILTER -->
+            <!-- FILTER TABS (F5: filter by type) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
@@ -137,15 +137,30 @@
                     android:text="Found"/>
             </LinearLayout>
 
-            <!-- TITLE -->
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Sync indicator (F4 — API refresh) -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Recent Posts"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"/>
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginTop="6dp">
 
-            <!-- RecyclerView -->
+                <ProgressBar
+                    android:id="@+id/progressSync"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Recent Posts"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <!-- Recent (horizontal) -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerRecent"
                 android:layout_width="match_parent"
@@ -153,50 +168,20 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="12dp"/>
 
-            <!-- GRID -->
-            <GridLayout
+            <!-- All items (vertical) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All Items"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerAll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:useDefaultMargins="true">
-
-                <!-- ID Cards FULL WIDTH -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_columnSpan="2"
-                    android:text="ID Cards"
-                    android:gravity="center"
-                    android:background="@drawable/bg_category_featured"/>
-
-                <!-- Electronics -->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_columnWeight="1"
-                    android:text="Electronics"
-                    android:gravity="center"
-                    android:background="@drawable/bg_card"/>
-
-                <!-- Wallets -->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_columnWeight="1"
-                    android:text="Wallets"
-                    android:gravity="center"
-                    android:background="@drawable/bg_card"/>
-
-                <!-- Others FULL WIDTH -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_columnSpan="2"
-                    android:text="Others"
-                    android:gravity="center"
-                    android:background="@drawable/bg_card"/>
-
-            </GridLayout>
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +10,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Back Button -->
         <Button
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
@@ -19,25 +17,67 @@
             android:text="Back"
             android:layout_marginBottom="10dp"/>
 
-        <!-- Title -->
-        <TextView
-            android:id="@+id/txtTitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#212121"
-            android:paddingBottom="10dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <!-- Card -->
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#212121"/>
+
+            <TextView
+                android:id="@+id/txtType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/bg_badge_red"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textSize="13sp"
+            android:textColor="#1565C0"
+            android:textStyle="bold"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/bg_card"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:layout_marginTop="14dp">
 
-            <!-- Location -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textStyle="bold"
+                android:textColor="#757575"/>
+
+            <TextView
+                android:id="@+id/txtDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#212121"
+                android:layout_marginBottom="10dp"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,11 +93,10 @@
                 android:textColor="#212121"
                 android:layout_marginBottom="10dp"/>
 
-            <!-- Time -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time"
+                android:text="Date"
                 android:textStyle="bold"
                 android:textColor="#757575"/>
 
@@ -66,19 +105,58 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="#212121"/>
+                android:textColor="#212121"
+                android:layout_marginBottom="10dp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact"
+                android:textStyle="bold"
+                android:textColor="#757575"/>
+
+            <TextView
+                android:id="@+id/txtContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="#212121"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/txtSource"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:textColor="#9E9E9E"/>
         </LinearLayout>
 
-        <!-- Button -->
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contact Owner"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="#1565C0"
-            android:textColor="#FFFFFF"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/btnEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:text="Edit"
+                android:backgroundTint="#1565C0"
+                android:textColor="#FFFFFF"/>
+
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:text="Delete"
+                android:backgroundTint="#C62828"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
 
     </LinearLayout>
-
 </ScrollView>

@@ -43,4 +43,16 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+
+    // Fragment + Lifecycle KTX (viewLifecycleOwner.lifecycleScope)
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+
+    // Kotlin Coroutines (background work for DB + API)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // Retrofit + Gson (REST API integration — F1)
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 }

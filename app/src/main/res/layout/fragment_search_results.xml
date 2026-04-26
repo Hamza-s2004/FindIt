@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F7FA">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#1565C0"
+        app:title="Results"
+        app:titleTextColor="#FFFFFF"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/btnBackResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"/>
+
+        <TextView
+            android:id="@+id/txtSummary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:textColor="#212121"
+            android:textSize="13sp"/>
+
+        <Button
+            android:id="@+id/btnSort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sort: Newest"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerResults"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp"
+            android:clipToPadding="false"/>
+
+        <TextView
+            android:id="@+id/txtEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="No items match your filters"
+            android:textColor="#757575"
+            android:textSize="14sp"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+    <include layout="@layout/layout_footer"/>
+
+</LinearLayout>

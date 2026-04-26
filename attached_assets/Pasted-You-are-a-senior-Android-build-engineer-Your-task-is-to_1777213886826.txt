@@ -1,0 +1,109 @@
+You are a senior Android build engineer.
+
+Your task is to take the EXISTING Android project and produce a FULLY BUILDABLE APK file (debug and release).
+
+This is NOT just code generation — you must configure and execute the build process correctly.
+
+========================
+GOAL
+========================
+Generate a downloadable APK from the project.
+
+========================
+STEP 1: VALIDATE PROJECT
+========================
+- Ensure project follows Android Gradle structure
+- Fix any missing dependencies or incorrect Gradle configs
+- Ensure:
+  - compileSdk, targetSdk are valid
+  - Kotlin + Gradle versions are compatible
+  - No unresolved imports or build errors
+
+========================
+STEP 2: GRADLE CONFIGURATION
+========================
+- Verify or create:
+  - settings.gradle
+  - build.gradle (project + app)
+- Enable:
+  - viewBinding or dataBinding if used
+- Ensure dependencies:
+  - Retrofit / Volley
+  - RecyclerView
+  - Coroutines
+
+========================
+STEP 3: SIGNING CONFIG (IMPORTANT)
+========================
+
+Create DEBUG and RELEASE configs:
+
+DEBUG:
+- Use default debug keystore
+
+RELEASE:
+- Generate a signing config:
+    storeFile = file("release.keystore")
+    storePassword = "123456"
+    keyAlias = "release"
+    keyPassword = "123456"
+
+- Configure:
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+
+========================
+STEP 4: BUILD COMMAND
+========================
+
+Run Gradle commands:
+
+For debug APK:
+    ./gradlew assembleDebug
+
+For release APK:
+    ./gradlew assembleRelease
+
+========================
+STEP 5: OUTPUT
+========================
+
+After build:
+- Locate APK file:
+    app/build/outputs/apk/debug/app-debug.apk
+    app/build/outputs/apk/release/app-release.apk
+
+- Provide:
+  1. Exact file path
+  2. Confirmation build succeeded
+  3. Any fixes applied
+
+========================
+ERROR HANDLING
+========================
+
+If build fails:
+- Fix errors automatically
+- Retry build
+- Do NOT stop at errors
+
+========================
+IMPORTANT RULES
+========================
+
+- Do NOT skip signing config
+- Do NOT leave project unbuildable
+- Do NOT output partial setup
+- Ensure final APK is installable
+
+========================
+FINAL RESULT
+========================
+
+Deliver:
+- Working APK file path
+- Fully buildable Android project
