@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FindIt — Android Project</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #111c34;
+    --panel-2: #162241;
+    --text: #e6ecff;
+    --muted: #93a4c8;
+    --accent: #6c8cff;
+    --accent-2: #38bdf8;
+    --border: #243155;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+  header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 24px; border-radius: 16px;
+    background: linear-gradient(135deg, #1c2a55, #0f172a);
+    border: 1px solid var(--border);
+  }
+  .logo {
+    width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 22px; color: #0b1224;
+  }
+  h1 { margin: 0 0 4px; font-size: 24px; }
+  .sub { color: var(--muted); margin: 0; font-size: 14px; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 20px; }
+  @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } }
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px;
+  }
+  .card h2 { margin: 0 0 10px; font-size: 16px; color: var(--accent-2); }
+  .card p, .card li { color: var(--text); font-size: 14px; line-height: 1.55; }
+  .muted { color: var(--muted); }
+  ul { margin: 8px 0 0; padding-left: 18px; }
+  code { background: var(--panel-2); padding: 2px 6px; border-radius: 6px; font-size: 13px; color: #cfe1ff; }
+  pre {
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px; overflow: auto; font-size: 13px; color: #cfe1ff;
+  }
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 999px;
+    background: rgba(108,140,255,.15); color: #b9c8ff; font-size: 12px;
+    border: 1px solid rgba(108,140,255,.35); margin-right: 6px;
+  }
+  .notice {
+    margin-top: 20px; padding: 16px; border-radius: 12px;
+    background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.35);
+    color: #d4ecff;
+  }
+  .file-list { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #cfe1ff; }
+  .file-list .dir { color: var(--accent-2); }
+  footer { color: var(--muted); font-size: 12px; text-align: center; margin-top: 32px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">Fi</div>
+      <div>
+        <h1>FindIt — Lost &amp; Found Android App</h1>
+        <p class="sub">Native Android (Kotlin + Gradle) project. Imported into Replit for browsing.</p>
+        <div style="margin-top: 8px;">
+          <span class="badge">Kotlin</span>
+          <span class="badge">Android SDK 36</span>
+          <span class="badge">Gradle (AGP 9.0.1)</span>
+          <span class="badge">Min SDK 24</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="notice">
+      <strong>Heads up:</strong> This is a native Android application. It can't run inside the
+      Replit web preview because Android apps require an Android emulator or a physical device.
+      To actually run the app, open the project in <em>Android Studio</em> and run it on an
+      emulator or a connected Android device.
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>About the project</h2>
+        <p><strong>FindIt</strong> is a lost-and-found Android application that lets users
+          report, search, and manage lost or discovered items.</p>
+        <p class="muted">Package: <code>com.example.findit</code></p>
+      </div>
+
+      <div class="card">
+        <h2>Tech stack</h2>
+        <ul>
+          <li>Language: <strong>Kotlin</strong></li>
+          <li>Build: <strong>Gradle</strong> with Kotlin DSL</li>
+          <li>UI: AndroidX AppCompat, Material Components, ConstraintLayout, RecyclerView</li>
+          <li>compileSdk: 36 · targetSdk: 36 · minSdk: 24</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>App screens (Fragments)</h2>
+        <ul>
+          <li>Home</li>
+          <li>Search</li>
+          <li>Post</li>
+          <li>Notifications</li>
+          <li>Profile</li>
+          <li>Detail</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>How to run locally</h2>
+        <ol style="padding-left: 18px; margin: 0;">
+          <li>Install <a href="https://developer.android.com/studio">Android Studio</a>.</li>
+          <li>Open this folder as an existing Gradle project.</li>
+          <li>Let Gradle sync, then run on an emulator or device.</li>
+        </ol>
+        <p class="muted" style="margin-top:10px;">From the command line with the Android SDK installed:</p>
+<pre>./gradlew assembleDebug</pre>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 16px;">
+      <h2>Project layout</h2>
+<pre class="file-list">FindIt/
+├── <span class="dir">app/</span>
+│   ├── build.gradle.kts
+│   └── <span class="dir">src/main/</span>
+│       ├── AndroidManifest.xml
+│       ├── <span class="dir">java/com/example/findit/</span>
+│       │   ├── MainActivity.kt
+│       │   ├── HomeFragment.kt
+│       │   ├── SearchFragment.kt
+│       │   ├── PostFragment.kt
+│       │   ├── NotificationsFragment.kt
+│       │   └── ProfileFragment.kt
+│       └── <span class="dir">res/</span>  (layouts, drawables, values)
+├── <span class="dir">gradle/</span>
+│   └── libs.versions.toml
+├── build.gradle.kts
+└── settings.gradle.kts</pre>
+    </div>
+
+    <footer>FindIt · Android project · Preview page served from Replit</footer>
+  </div>
+</body>
+</html>
