@@ -14,8 +14,8 @@ it on an emulator or a connected Android device.
 ## Tech stack
 
 - Language: Kotlin
-- Build system: Gradle (Kotlin DSL), Android Gradle Plugin 9.0.1
-- Android: compileSdk 36, targetSdk 36, minSdk 24
+- Build system: Gradle 8.9 (Kotlin DSL), Android Gradle Plugin 8.7.3, Kotlin 2.0.21
+- Android: compileSdk 35, targetSdk 35, minSdk 24
 - UI: AndroidX AppCompat, Material Components, ConstraintLayout, RecyclerView
 - Data: SQLiteOpenHelper (no Room), Retrofit + Gson, OkHttp logging interceptor
 - Concurrency: Kotlin Coroutines (Dispatchers.IO for all DB / network work)
@@ -139,7 +139,36 @@ From the command line (with the Android SDK installed):
 
 ```
 ./gradlew assembleDebug
+./gradlew assembleRelease   # signed with release.keystore at repo root
 ```
+
+## Building APKs inside this Repl
+
+The Repl is fully provisioned to build the project headlessly:
+
+- JDK 19 (GraalVM 22.3) installed via the language module
+- Android SDK at `~/android-sdk` with platform-tools, platforms;android-35
+  + android-36, build-tools;34.0.0 + 35.0.0 + 36.0.0
+- `local.properties` at the repo root points Gradle at that SDK
+- `release.keystore` at the repo root (RSA 2048, alias `release`,
+  storePassword `123456`, keyPassword `123456`) signs the release build via
+  the `signingConfigs.release` block in `app/build.gradle.kts`
+
+To rebuild from a shell in the Repl:
+
+```
+export ANDROID_HOME=$HOME/android-sdk
+./gradlew --no-daemon assembleDebug assembleRelease
+```
+
+Outputs:
+
+- `app/build/outputs/apk/debug/app-debug.apk`     (signed with the Android debug cert)
+- `app/build/outputs/apk/release/app-release.apk` (signed with `release.keystore`, v2 scheme)
+
+A first build takes ~1.5 minutes. Because Gradle daemons are killed when an
+ad-hoc bash session exits in the Replit container, run long builds either
+inside a workflow or with `setsid`/`nohup` and a redirected log file.
 
 ## Required permissions
 
