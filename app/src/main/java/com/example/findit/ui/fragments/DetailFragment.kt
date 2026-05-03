@@ -10,79 +10,85 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.findit.R
 import com.example.findit.data.model.Item
-import com.example.findit.data.repository.ItemRepository
+import com.example.findit.data.repository.FirebaseRepository
 import kotlinx.coroutines.launch
 
-/**
- * Read + entry point for Update / Delete (F3).
- */
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
-    companion object {
-        const val ARG_ITEM_ID = "arg_item_id"
-    }
-
-    private lateinit var repo: ItemRepository
     private var item: Item? = null
+    private val repo = FirebaseRepository()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        repo = ItemRepository(requireContext())
 
-        val itemId = arguments?.getLong(ARG_ITEM_ID, -1L) ?: -1L
-        if (itemId <= 0L) {
-            Toast.makeText(requireContext(), "Invalid item", Toast.LENGTH_SHORT).show()
-            requireActivity().supportFragmentManager.popBackStack()
-            return
-        }
-
+        // ✅ BACK
         view.findViewById<Button>(R.id.btnBack).setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
-        val btnEdit = view.findViewById<Button>(R.id.btnEdit)
-        val btnDelete = view.findViewById<Button>(R.id.btnDelete)
+        val remoteId = arguments?.getString("remoteId")
 
-        btnEdit.setOnClickListener {
-            val current = item ?: return@setOnClickListener
-            val frag = EditItemFragment().apply {
-                arguments = Bundle().apply { putLong(EditItemFragment.ARG_ITEM_ID, current.id) }
+        // 🔥 GET DATA
+        item = Item(
+            id = System.currentTimeMillis(),
+            title = arguments?.getString("title") ?: "",
+            type = arguments?.getString("type") ?: "",
+            categoryName = arguments?.getString("category") ?: "",
+            description = arguments?.getString("description") ?: "",
+            location = arguments?.getString("location") ?: "",
+            date = arguments?.getString("date") ?: "",
+            contact = arguments?.getString("contact") ?: "",
+            source = arguments?.getString("source") ?: ""
+        )
+
+        bind(view, item!!)
+
+        // ✅ EDIT (NOW WORKING)
+        view.findViewById<Button>(R.id.btnEdit).setOnClickListener {
+
+            val frag = PostFragment().apply {
+                arguments = Bundle().apply {
+                    putString("remoteId", remoteId)
+
+                    putString("title", item?.title)
+                    putString("description", item?.description)
+                    putString("type", item?.type)
+                    putString("category", item?.categoryName)
+                    putString("location", item?.location)
+                    putString("date", item?.date)
+                    putString("contact", item?.contact)
+                }
             }
+
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, frag)
                 .addToBackStack(null)
                 .commit()
         }
 
-        btnDelete.setOnClickListener {
-            val current = item ?: return@setOnClickListener
+        // ✅ DELETE (REAL FIREBASE)
+        view.findViewById<Button>(R.id.btnDelete).setOnClickListener {
+
+            if (remoteId == null) {
+                Toast.makeText(requireContext(), "Cannot delete item", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             AlertDialog.Builder(requireContext())
-                .setTitle("Delete item")
-                .setMessage("Remove \"${current.title}\" permanently?")
-                .setNegativeButton("Cancel", null)
+                .setTitle("Delete Item")
+                .setMessage("Are you sure?")
                 .setPositiveButton("Delete") { _, _ ->
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        val rows = repo.deleteItem(current.id)
-                        if (rows > 0) {
-                            Toast.makeText(requireContext(), "Deleted", Toast.LENGTH_SHORT).show()
-                            requireActivity().supportFragmentManager.popBackStack()
-                        } else {
-                            Toast.makeText(requireContext(), "Could not delete", Toast.LENGTH_SHORT).show()
-                        }
+
+                    lifecycleScope.launch {
+                        repo.deleteItem(remoteId)
+
+                        Toast.makeText(requireContext(), "Deleted successfully", Toast.LENGTH_SHORT).show()
+
+                        requireActivity().supportFragmentManager.popBackStack()
                     }
                 }
+                .setNegativeButton("Cancel", null)
                 .show()
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            val loaded = repo.getItemById(itemId)
-            if (loaded == null) {
-                Toast.makeText(requireContext(), "Item not found", Toast.LENGTH_SHORT).show()
-                requireActivity().supportFragmentManager.popBackStack()
-                return@launch
-            }
-            item = loaded
-            bind(view, loaded)
         }
     }
 

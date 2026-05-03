@@ -1,27 +1,21 @@
 package com.example.findit.data.model
 
-/**
- * Domain model representing a lost or found item.
- *
- * Used by:
- *  - F2 SQLiteOpenHelper (rows in `items` table, FK -> categories.id)
- *  - F1 API mapper (ApiPost -> Item)
- *  - F3 CRUD UI (PostFragment / EditItemFragment / DetailFragment)
- *  - F5 Search/Sort results
- */
 data class Item(
-    val id: Long = 0L,
-    val title: String,
-    val description: String = "",
-    val type: String = TYPE_LOST,
-    val categoryId: Long,
-    val categoryName: String = "",
-    val location: String = "",
-    val date: String = "",
-    val contact: String = "",
-    val source: String = SOURCE_LOCAL,
-    val remoteId: Int? = null,
-    val createdAt: Long = System.currentTimeMillis()
+    var id: Long = 0L,
+    var title: String = "",
+    var description: String = "",
+    var type: String = TYPE_LOST,
+    var categoryId: Long = 0L,
+    var categoryName: String = "",
+    var location: String = "",
+    var date: String = "",
+    var contact: String = "",
+    var source: String = SOURCE_LOCAL,
+
+    // 🔥 FIX: MUST be String (Firestore doc ID)
+    var remoteId: String? = null,
+
+    var createdAt: Long = System.currentTimeMillis()
 ) {
     companion object {
         const val TYPE_LOST = "Lost"

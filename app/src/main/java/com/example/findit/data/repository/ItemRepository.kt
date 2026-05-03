@@ -28,19 +28,6 @@ import com.example.findit.data.model.Item
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- * Single source of truth for the UI layer.
- *
- * Logic-map:
- *   F1 → fetchApiData()           — Retrofit call
- *   F2 → handled in DatabaseHelper (schema)
- *   F3 → insertItem / getAllItems / updateItem / deleteItem
- *   F4 → syncApiToDb()            — caches API rows into SQLite
- *   F5 → searchItems()            — LIKE + ORDER BY + filters
- *
- * EVERY public function suspends and switches to Dispatchers.IO so callers
- * never block the main thread, regardless of which fragment invokes it.
- */
 class ItemRepository(
     context: Context,
     private val api: ApiService = RetrofitClient.apiService
@@ -48,107 +35,35 @@ class ItemRepository(
 
     private val dbHelper = DatabaseHelper(context.applicationContext)
 
-    // -------------------------------------------------------------------------
-    // F1 — REST API
-    // -------------------------------------------------------------------------
+    // ---------------- API ----------------
 
-    /** Raw API call — returns parsed JSON. */
     suspend fun fetchApiData(limit: Int = 20): List<ApiPost> = withContext(Dispatchers.IO) {
         api.getPosts(limit)
     }
 
-    // -------------------------------------------------------------------------
-    // F4 — API → SQLite cache (Option A: offline-first)
-    // -------------------------------------------------------------------------
+    // ---------------- CRUD ----------------
 
-    /**
-     * Pulls the latest /posts from the network and upserts each into the items
-     * table tagged with source = "API". Returns the number of rows touched.
-     *
-     * If the API fails the local DB is left untouched and the exception bubbles
-     * up so the caller can show a Toast/Snackbar.
-     */
-    suspend fun syncApiToDb(limit: Int = 20): Int = withContext(Dispatchers.IO) {
-        val posts = api.getPosts(limit)
-        val cats = getCategoriesInternal()
-        if (cats.isEmpty()) return@withContext 0
-
-        val db = dbHelper.writableDatabase
-        var touched = 0
-        db.beginTransaction()
-        try {
-            posts.forEach { post ->
-                // Spread API rows across categories deterministically so they
-                // exercise the FK relationship.
-                val category = cats[post.id % cats.size]
-
-                val cv = ContentValues().apply {
-                    put(ITEM_TITLE, post.title.take(80))
-                    put(ITEM_DESC, post.body)
-                    put(ITEM_TYPE, Item.TYPE_FOUND) // API posts surface as "Found"
-                    put(ITEM_CATEGORY_ID, category.id)
-                    put(ITEM_LOCATION, "Reported online")
-                    put(ITEM_DATE, "")
-                    put(ITEM_CONTACT, "user-${post.userId}@findit.app")
-                    put(ITEM_SOURCE, Item.SOURCE_API)
-                    put(ITEM_REMOTE_ID, post.id)
-                    put(ITEM_CREATED_AT, System.currentTimeMillis())
-                }
-
-                // Upsert by remote_id so repeated syncs don't duplicate.
-                val updated = db.update(
-                    TBL_ITEMS, cv,
-                    "$ITEM_REMOTE_ID = ?",
-                    arrayOf(post.id.toString())
-                )
-                if (updated == 0) {
-                    db.insert(TBL_ITEMS, null, cv)
-                }
-                touched++
-            }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
-        }
-        touched
-    }
-
-    // -------------------------------------------------------------------------
-    // F3 — CRUD
-    // -------------------------------------------------------------------------
-
-    /** Create */
     suspend fun insertItem(item: Item): Long = withContext(Dispatchers.IO) {
-        val cv = item.toContentValues()
-        dbHelper.writableDatabase.insert(TBL_ITEMS, null, cv)
+        dbHelper.writableDatabase.insert(TBL_ITEMS, null, item.toContentValues())
     }
 
-    /** Read — all items, newest first */
     suspend fun getAllItems(): List<Item> = withContext(Dispatchers.IO) {
-        queryItems(orderBy = orderClause(Item.SORT_NEWEST))
-    }
-
-    /** Read — single item by primary key */
-    suspend fun getItemById(id: Long): Item? = withContext(Dispatchers.IO) {
         queryItems(
-            where = "i.$ITEM_ID = ?",
-            args = arrayOf(id.toString())
-        ).firstOrNull()
-    }
-
-    /** Read — items matching a type ("Lost" / "Found" / "All") */
-    suspend fun getItemsByType(type: String): List<Item> = withContext(Dispatchers.IO) {
-        if (type == Item.TYPE_ALL) return@withContext getAllItems()
-        queryItems(
-            where = "i.$ITEM_TYPE = ?",
-            args = arrayOf(type),
+            where = "1=1",
+            args = emptyArray(),
             orderBy = orderClause(Item.SORT_NEWEST)
         )
     }
 
-    /** Update */
+    suspend fun getItemById(id: Long): Item? = withContext(Dispatchers.IO) {
+        queryItems(
+            where = "i.$ITEM_ID = ?",
+            args = arrayOf(id.toString()),
+            orderBy = orderClause(Item.SORT_NEWEST)
+        ).firstOrNull()
+    }
+
     suspend fun updateItem(item: Item): Int = withContext(Dispatchers.IO) {
-        if (item.id <= 0L) return@withContext 0
         dbHelper.writableDatabase.update(
             TBL_ITEMS,
             item.toContentValues(),
@@ -157,52 +72,41 @@ class ItemRepository(
         )
     }
 
-    /** Delete */
     suspend fun deleteItem(id: Long): Int = withContext(Dispatchers.IO) {
         dbHelper.writableDatabase.delete(
-            TBL_ITEMS, "$ITEM_ID = ?", arrayOf(id.toString())
+            TBL_ITEMS,
+            "$ITEM_ID = ?",
+            arrayOf(id.toString())
         )
     }
 
-    // -------------------------------------------------------------------------
-    // F5 — Dynamic SQL: search (LIKE) + sort (ORDER BY) + optional filters
-    // -------------------------------------------------------------------------
+    // ---------------- SEARCH ----------------
 
     suspend fun searchItems(
         query: String = "",
         type: String = Item.TYPE_ALL,
         categoryId: Long? = null,
-        fromDate: String? = null,
-        toDate: String? = null,
         sort: String = Item.SORT_NEWEST
     ): List<Item> = withContext(Dispatchers.IO) {
+
         val where = StringBuilder("1=1")
         val args = mutableListOf<String>()
 
         if (query.isNotBlank()) {
-            // Search across title, description, location AND category name.
-            where.append(" AND (i.$ITEM_TITLE LIKE ?")
-            where.append(" OR i.$ITEM_DESC LIKE ?")
-            where.append(" OR i.$ITEM_LOCATION LIKE ?")
-            where.append(" OR c.$CAT_NAME LIKE ?)")
-            val pattern = "%${query.trim()}%"
-            repeat(4) { args.add(pattern) }
+            where.append(" AND (i.$ITEM_TITLE LIKE ? OR i.$ITEM_DESC LIKE ?)")
+            val q = "%$query%"
+            args.add(q)
+            args.add(q)
         }
+
         if (type != Item.TYPE_ALL) {
             where.append(" AND i.$ITEM_TYPE = ?")
             args.add(type)
         }
+
         categoryId?.let {
             where.append(" AND i.$ITEM_CATEGORY_ID = ?")
             args.add(it.toString())
-        }
-        if (!fromDate.isNullOrBlank()) {
-            where.append(" AND i.$ITEM_DATE >= ?")
-            args.add(fromDate)
-        }
-        if (!toDate.isNullOrBlank()) {
-            where.append(" AND i.$ITEM_DATE <= ?")
-            args.add(toDate)
         }
 
         queryItems(
@@ -212,71 +116,40 @@ class ItemRepository(
         )
     }
 
-    // -------------------------------------------------------------------------
-    // Categories
-    // -------------------------------------------------------------------------
+    // ---------------- INTERNAL ----------------
 
-    suspend fun getCategories(): List<Category> = withContext(Dispatchers.IO) {
-        getCategoriesInternal()
-    }
+    private fun queryItems(
+        where: String,
+        args: Array<String>,
+        orderBy: String
+    ): List<Item> {
 
-    suspend fun getCategoryByName(name: String): Category? = withContext(Dispatchers.IO) {
-        getCategoriesInternal().firstOrNull { it.name.equals(name, ignoreCase = true) }
-    }
+        val sql = """
+            SELECT i.$ITEM_ID, i.$ITEM_TITLE, i.$ITEM_DESC, i.$ITEM_TYPE,
+                   i.$ITEM_CATEGORY_ID, c.$CAT_NAME,
+                   i.$ITEM_LOCATION, i.$ITEM_DATE, i.$ITEM_CONTACT,
+                   i.$ITEM_SOURCE, i.$ITEM_REMOTE_ID, i.$ITEM_CREATED_AT
+            FROM $TBL_ITEMS i
+            INNER JOIN $TBL_CATEGORIES c ON c.$CAT_ID = i.$ITEM_CATEGORY_ID
+            WHERE $where
+            ORDER BY $orderBy
+        """.trimIndent()
 
-    // -------------------------------------------------------------------------
-    // Internals
-    // -------------------------------------------------------------------------
+        val list = mutableListOf<Item>()
 
-    private fun getCategoriesInternal(): List<Category> {
-        val list = mutableListOf<Category>()
-        dbHelper.readableDatabase.rawQuery(
-            "SELECT $CAT_ID, $CAT_NAME, $CAT_EMOJI FROM $TBL_CATEGORIES ORDER BY $CAT_NAME ASC;",
-            null
-        ).use { c ->
+        dbHelper.readableDatabase.rawQuery(sql, args).use { c ->
             while (c.moveToNext()) {
-                list.add(
-                    Category(
-                        id = c.getLong(0),
-                        name = c.getString(1),
-                        emoji = c.getString(2) ?: ""
-                    )
-                )
+                list.add(c.toItem())
             }
         }
-        return list
-    }
 
-    /** Centralised SELECT joining items + categories so we always get the name. */
-    private fun queryItems(
-        where: String = "1=1",
-        args: Array<String> = emptyArray(),
-        orderBy: String = orderClause(Item.SORT_NEWEST),
-        limit: Int? = null
-    ): List<Item> {
-        val sql = buildString {
-            append("SELECT i.$ITEM_ID, i.$ITEM_TITLE, i.$ITEM_DESC, i.$ITEM_TYPE, ")
-            append("i.$ITEM_CATEGORY_ID, c.$CAT_NAME, ")
-            append("i.$ITEM_LOCATION, i.$ITEM_DATE, i.$ITEM_CONTACT, ")
-            append("i.$ITEM_SOURCE, i.$ITEM_REMOTE_ID, i.$ITEM_CREATED_AT ")
-            append("FROM $TBL_ITEMS i ")
-            append("INNER JOIN $TBL_CATEGORIES c ON c.$CAT_ID = i.$ITEM_CATEGORY_ID ")
-            append("WHERE ").append(where).append(' ')
-            append("ORDER BY ").append(orderBy)
-            if (limit != null) append(" LIMIT ").append(limit)
-            append(';')
-        }
-        val list = mutableListOf<Item>()
-        dbHelper.readableDatabase.rawQuery(sql, args).use { c ->
-            while (c.moveToNext()) list.add(c.toItem())
-        }
         return list
     }
 
     private fun orderClause(sort: String): String = when (sort) {
         Item.SORT_OLDEST -> "i.$ITEM_CREATED_AT ASC"
-        Item.SORT_TITLE_ASC -> "i.$ITEM_TITLE COLLATE NOCASE ASC"
-        Item.SORT_TITLE_DESC -> "i.$ITEM_TITLE COLLATE NOCASE DESC"
+        Item.SORT_TITLE_ASC -> "i.$ITEM_TITLE ASC"
+        Item.SORT_TITLE_DESC -> "i.$ITEM_TITLE DESC"
         else -> "i.$ITEM_CREATED_AT DESC"
     }
 
@@ -304,7 +177,51 @@ class ItemRepository(
         date = getString(7) ?: "",
         contact = getString(8) ?: "",
         source = getString(9) ?: Item.SOURCE_LOCAL,
-        remoteId = if (isNull(10)) null else getInt(10),
+        remoteId = if (isNull(10)) null else getString(10),
         createdAt = getLong(11)
     )
+
+    private fun getCategoriesInternal(): List<Category> {
+        val list = mutableListOf<Category>()
+
+        dbHelper.readableDatabase.rawQuery(
+            "SELECT $CAT_ID, $CAT_NAME, $CAT_EMOJI FROM $TBL_CATEGORIES",
+            null
+        ).use { c ->
+            while (c.moveToNext()) {
+                list.add(
+                    Category(
+                        id = c.getLong(0),
+                        name = c.getString(1),
+                        emoji = c.getString(2) ?: ""
+                    )
+                )
+            }
+        }
+
+        return list
+    }
+    suspend fun getCategoryByName(name: String): Category? = withContext(Dispatchers.IO) {
+
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT $CAT_ID, $CAT_NAME, $CAT_EMOJI FROM $TBL_CATEGORIES WHERE $CAT_NAME = ?",
+            arrayOf(name)
+        )
+
+        var category: Category? = null
+
+        cursor.use {
+            if (it.moveToFirst()) {
+                category = Category(
+                    id = it.getLong(0),
+                    name = it.getString(1),
+                    emoji = it.getString(2) ?: ""
+                )
+            }
+        }
+
+        category
+    }
 }

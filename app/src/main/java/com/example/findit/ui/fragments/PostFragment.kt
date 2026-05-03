@@ -11,19 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.findit.R
 import com.example.findit.data.model.Item
-import com.example.findit.data.repository.ItemRepository
+import com.example.findit.data.repository.FirebaseRepository
 import kotlinx.coroutines.launch
 
-/**
- * F3 — Create. Submits a new Item row into SQLite.
- */
 class PostFragment : Fragment(R.layout.fragment_post) {
 
-    private lateinit var repo: ItemRepository
+    private val repo = FirebaseRepository()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        repo = ItemRepository(requireContext())
 
         val etName = view.findViewById<EditText>(R.id.etItemName)
         val etDesc = view.findViewById<EditText>(R.id.etDescription)
@@ -34,12 +30,35 @@ class PostFragment : Fragment(R.layout.fragment_post) {
         val etContact = view.findViewById<EditText>(R.id.etContact)
         val btnSubmit = view.findViewById<TextView>(R.id.btnSubmit)
 
+        // 🔥 CHECK EDIT MODE
+        val remoteId = arguments?.getString("remoteId")
+        val isEdit = remoteId != null
+
+        // 🔥 PREFILL (EDIT MODE)
+        if (isEdit) {
+            etName.setText(arguments?.getString("title"))
+            etDesc.setText(arguments?.getString("description"))
+            etLocation.setText(arguments?.getString("location"))
+            etDate.setText(arguments?.getString("date"))
+            etContact.setText(arguments?.getString("contact"))
+
+            if (arguments?.getString("type") == Item.TYPE_FOUND) {
+                rgType.check(R.id.rbFound)
+            } else {
+                rgType.check(R.id.rbLost)
+            }
+
+            btnSubmit.text = "Update"
+        }
+
         btnSubmit.setOnClickListener {
+
             val title = etName.text.toString().trim()
             if (title.isEmpty()) {
-                Toast.makeText(requireContext(), "Item name is required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Item name required", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             val type = if (rgType.checkedRadioButtonId == R.id.rbFound)
                 Item.TYPE_FOUND else Item.TYPE_LOST
 
@@ -52,29 +71,35 @@ class PostFragment : Fragment(R.layout.fragment_post) {
                 else -> "Others"
             }
 
+            val item = Item(
+                title = title,
+                description = etDesc.text.toString().trim(),
+                type = type,
+                categoryId = 0L,
+                categoryName = categoryName,
+                location = etLocation.text.toString().trim(),
+                date = etDate.text.toString().trim(),
+                contact = etContact.text.toString().trim(),
+                source = Item.SOURCE_LOCAL
+            )
+
             viewLifecycleOwner.lifecycleScope.launch {
-                val cat = repo.getCategoryByName(categoryName)
-                if (cat == null) {
-                    Toast.makeText(requireContext(), "Category not found", Toast.LENGTH_SHORT).show()
-                    return@launch
-                }
-                val newItem = Item(
-                    title = title,
-                    description = etDesc.text.toString().trim(),
-                    type = type,
-                    categoryId = cat.id,
-                    categoryName = cat.name,
-                    location = etLocation.text.toString().trim(),
-                    date = etDate.text.toString().trim(),
-                    contact = etContact.text.toString().trim(),
-                    source = Item.SOURCE_LOCAL
-                )
-                val newId = repo.insertItem(newItem)
-                if (newId > 0L) {
-                    Toast.makeText(requireContext(), "Posted!", Toast.LENGTH_SHORT).show()
+                try {
+                    if (isEdit) {
+                        // 🔥 UPDATE
+                        repo.deleteItem(remoteId!!)
+                        repo.addItem(item)
+                        Toast.makeText(requireContext(), "Updated!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // 🔥 ADD
+                        repo.addItem(item)
+                        Toast.makeText(requireContext(), "Posted!", Toast.LENGTH_SHORT).show()
+                    }
+
                     requireActivity().supportFragmentManager.popBackStack()
-                } else {
-                    Toast.makeText(requireContext(), "Could not save item", Toast.LENGTH_SHORT).show()
+
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

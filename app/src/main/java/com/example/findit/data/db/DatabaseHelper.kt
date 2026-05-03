@@ -5,16 +5,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-/**
- * F2 — Pure SQLiteOpenHelper (NO Room).
- *
- * Schema:
- *   categories(id PK AI, name UNIQUE, emoji)
- *   items(id PK AI, ..., category_id  -> FK -> categories.id)
- *
- * Foreign keys are enabled in onConfigure() so the FK constraint is enforced
- * at the engine level (not just declared).
- */
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context.applicationContext, DB_NAME, null, DB_VERSION) {
 

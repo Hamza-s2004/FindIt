@@ -6,10 +6,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-/**
- * F1 — Single Retrofit instance shared by the whole app.
- * Lazy so we don't pay the cost until something actually hits the network.
- */
 object RetrofitClient {
 
     private const val BASE_URL = "https://jsonplaceholder.typicode.com/"

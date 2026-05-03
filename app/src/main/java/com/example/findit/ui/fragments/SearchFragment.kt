@@ -7,16 +7,9 @@ import android.widget.LinearLayout
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.example.findit.R
 import com.example.findit.data.model.Item
-import com.example.findit.data.repository.ItemRepository
-import kotlinx.coroutines.launch
 
-/**
- * F5 — collects user filters and hands them to SearchResultsFragment, which
- * runs the dynamic LIKE / ORDER BY query against SQLite.
- */
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
     private var selectedCategory: String? = null
@@ -32,41 +25,38 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val repo = ItemRepository(requireContext())
 
-        // Single-select category tags.
+        // Category selection
         tagIds.forEach { (id, name) ->
-            view.findViewById<TextView>(id).setOnClickListener { tag ->
+            view.findViewById<TextView>(id).setOnClickListener {
                 selectedCategory = if (selectedCategory == name) null else name
                 refreshTagStyles(view)
             }
         }
 
         view.findViewById<TextView>(R.id.btnApply).setOnClickListener {
+
             val query = view.findViewById<EditText>(R.id.etSearch).text.toString()
+
             val type = when (view.findViewById<RadioGroup>(R.id.rgFilterType).checkedRadioButtonId) {
                 R.id.rbFilterLost -> Item.TYPE_LOST
                 R.id.rbFilterFound -> Item.TYPE_FOUND
                 else -> Item.TYPE_ALL
             }
-            val from = view.findViewById<EditText>(R.id.etFromDate).text.toString()
-            val to = view.findViewById<EditText>(R.id.etToDate).text.toString()
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                val catId = selectedCategory?.let { repo.getCategoryByName(it)?.id }
-                val args = Bundle().apply {
-                    putString(SearchResultsFragment.ARG_QUERY, query)
-                    putString(SearchResultsFragment.ARG_TYPE, type)
-                    if (catId != null) putLong(SearchResultsFragment.ARG_CATEGORY_ID, catId)
-                    putString(SearchResultsFragment.ARG_FROM, from)
-                    putString(SearchResultsFragment.ARG_TO, to)
-                }
-                val frag = SearchResultsFragment().apply { arguments = args }
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, frag)
-                    .addToBackStack(null)
-                    .commit()
+            // ✅ UPDATED (added category)
+            val args = Bundle().apply {
+                putString(SearchResultsFragment.ARG_QUERY, query)
+                putString(SearchResultsFragment.ARG_TYPE, type)
+                putString("category", selectedCategory)   // 🔥 NEW
             }
+
+            val frag = SearchResultsFragment().apply { arguments = args }
+
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, frag)
+                .addToBackStack(null)
+                .commit()
         }
 
         // Footer
