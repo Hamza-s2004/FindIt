@@ -1,6 +1,7 @@
 package com.example.findit.ui.fragments
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -90,6 +91,18 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 .setNegativeButton("Cancel", null)
                 .show()
         }
+
+        // ✅ SHARE
+        view.findViewById<Button>(R.id.btnShare).setOnClickListener {
+            val shareText = buildShareText(item!!)
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, shareText)
+            }
+            val chooser = Intent.createChooser(shareIntent, "Share Item")
+            startActivity(chooser)
+        }
     }
 
     private fun bind(view: View, item: Item) {
@@ -106,5 +119,21 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             item.contact.ifBlank { "—" }
         view.findViewById<TextView>(R.id.txtSource).text =
             "Source: ${item.source}"
+    }
+
+    private fun buildShareText(item: Item): String {
+        val title = item.title.ifBlank { "Item" }
+        val type = item.type.ifBlank { "N/A" }
+        val location = item.location.ifBlank { "N/A" }
+        val contact = item.contact.ifBlank { "N/A" }
+        val description = item.description.ifBlank { "No description" }
+
+        return """
+            Item: $title
+            Type: $type
+            Location: $location
+            Contact: $contact
+            Description: $description
+        """.trimIndent()
     }
 }

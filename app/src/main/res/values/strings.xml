@@ -2,4 +2,6 @@
     <string name="app_name">FindIt</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Google Sign-In Web Client ID (from Firebase Console) -->
+    <string name="default_web_client_id">1002684811498-51g0l2c001th2ni9n016tbm1jgjemlmr.apps.googleusercontent.com</string>
 </resources>

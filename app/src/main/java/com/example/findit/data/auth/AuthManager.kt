@@ -2,6 +2,7 @@ package com.example.findit.data.auth
 
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
 class AuthManager(private val context: Context? = null) {
 
@@ -44,6 +45,24 @@ class AuthManager(private val context: Context? = null) {
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     saveUserName(name)   // ✅ save name
+                    callback(true, null)
+                } else {
+                    callback(false, it.exception?.message)
+                }
+            }
+    }
+
+    // ✅ NEW: Google Sign-In with ID token
+    fun loginWithGoogle(idToken: String, callback: (Boolean, String?) -> Unit) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val user = auth.currentUser
+                    // Save display name if available
+                    user?.displayName?.let { name ->
+                        saveUserName(name)
+                    }
                     callback(true, null)
                 } else {
                     callback(false, it.exception?.message)
