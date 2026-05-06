@@ -23,6 +23,8 @@ fun ComposeScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
+    var registrationPending by remember { mutableStateOf(false) }
+    var pendingEmail by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -65,28 +67,62 @@ fun ComposeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = {
+            if (!registrationPending) {
+                Button(onClick = {
 
-                if (name.isBlank() || email.isBlank() || password.length < 6) {
-                    message = "Fill all fields properly"
-                    return@Button
-                }
+                    // Password policy: min 8 chars, uppercase, lowercase, digit, special
+                    val pw = password
+                    val pwOk = pw.length >= 8 && pw.any { it.isDigit() } && pw.any { it.isLowerCase() } && pw.any { it.isUpperCase() } && pw.any { !it.isLetterOrDigit() }
 
-                auth.register(name, email, password) { success, msg ->
+                    if (name.isBlank() || email.isBlank() || !pwOk) {
+                        message = "Password must be at least 8 chars and include upper, lower, digit and special char. Fill all fields properly."
+                        return@Button
+                    }
 
-                    // 🔥 FIX: switch to main thread
-                    Handler(Looper.getMainLooper()).post {
-                        if (success) {
-                            message = "Registered!"
-                            onSuccess()   // ✅ now works
-                        } else {
-                            message = msg ?: "Error"
+                    auth.register(name, email, password) { success, msg ->
+                        Handler(Looper.getMainLooper()).post {
+                            if (success) {
+                                registrationPending = true
+                                pendingEmail = email
+                                message = msg ?: "Registered. Please verify your email (check inbox) before logging in."
+                            } else {
+                                message = msg ?: "Error"
+                            }
                         }
                     }
-                }
 
-            }) {
-                Text("Register")
+                }) {
+                    Text("Register")
+                }
+            } else {
+                // Pending verification UI
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = {
+                        // Check verification and complete registration
+                        auth.completeRegistrationIfVerified { ok, msg ->
+                            Handler(Looper.getMainLooper()).post {
+                                if (ok) {
+                                    message = "Email verified. Logging in..."
+                                    onSuccess()
+                                } else {
+                                    message = msg ?: "Not verified yet"
+                                }
+                            }
+                        }
+                    }) {
+                        Text("I verified")
+                    }
+
+                    Button(onClick = {
+                        auth.resendVerificationEmail { sent, msg ->
+                            Handler(Looper.getMainLooper()).post {
+                                if (sent) message = "Verification email resent" else message = msg ?: "Failed to resend"
+                            }
+                        }
+                    }) {
+                        Text("Resend verification")
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
